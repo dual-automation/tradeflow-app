@@ -1,77 +1,17 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <title>TradeFlow AI App</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Aminos Test</title>
+  </head>
+  <body>
 
-  <style>
-    body { margin:0; font-family:Arial, sans-serif; background:#f4f6f8; }
+    <div id="chat_form"></div>
 
-    header {
-      background: linear-gradient(135deg, #050a30, #3533cd);
-      color:#fff;
-      padding:24px;
-      text-align:center;
-    }
+    <script
+      src="https://app.aminos.ai/js/chat_form_plugin.js"
+      data-bot-id="57691">
+    </script>
 
-    .menu-strip {
-      background:#0b102a;
-      color:#dbeafe;
-      display:flex;
-      justify-content:space-between;
-      padding:10px 14px;
-      font-size:14px;
-    }
-
-    .menu-strip a {
-      background:#fff;
-      color:#050a30;
-      text-decoration:none;
-      padding:8px 12px;
-      border-radius:8px;
-      font-weight:700;
-      margin-left:8px;
-    }
-
-    main { padding:12px; }
-
-    /* REQUIRED */
-    #chat_form {
-      width:100%;
-      min-height:calc(100vh - 220px);
-      background:#fff;
-      border-radius:12px;
-      box-shadow:0 10px 30px rgba(0,0,0,.08);
-      overflow:hidden;
-    }
-  </style>
-</head>
-
-<body>
-
-<header>
-  <h1>TradeFlow AI</h1>
-  <p>Interactive App</p>
-</header>
-
-<div class="menu-strip">
-  <div>Type <b>MENU</b> anytime for options</div>
-  <div>
-    <a href="https://tradeflowai.tech" target="_blank">Back to Site</a>
-  </div>
-</div>
-
-<main>
-  <!-- THIS DIV IS NON-NEGOTIABLE -->
-  <div id="chat_form"></div>
-
-  <!-- SCRIPT MUST COME AFTER THE DIV -->
-  <script
-    src="https://app.aminos.ai/js/chat_form_plugin.js"
-    data-bot-id="57691">
-  </script>
-</main>
-
-</body>
+  </body>
 </html>
