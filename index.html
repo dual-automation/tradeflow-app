@@ -2,65 +2,112 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <title>TradeFlow AI — App</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>TradeFlow AI App</title>
+
   <style>
-    html, body {
+    * {
+      box-sizing: border-box;
       margin: 0;
       padding: 0;
-      height: 100%;
-      font-family: Arial, sans-serif;
-      background: #f7f7f7;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, sans-serif;
     }
-    .banner {
-      background: linear-gradient(135deg, #050a30, #3533cd);
+
+    body {
+      background: #f5f7fb;
+      color: #111;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      background: linear-gradient(135deg, #0b1c2d, #123a63);
       color: #fff;
-      padding: 20px;
+      padding: 22px 28px;
       text-align: center;
     }
-    .menu-strip {
-      background: #ffffff;
-      padding: 10px;
-      text-align: center;
-      font-size: 14px;
-      border-bottom: 1px solid #ddd;
-    }
-    .menu-strip a {
-      margin: 0 10px;
-      color: #3533cd;
-      text-decoration: none;
+
+    header h1 {
+      font-size: 26px;
       font-weight: 600;
+      margin-bottom: 6px;
     }
-    #aminos-container {
+
+    header p {
+      font-size: 14px;
+      opacity: 0.9;
+    }
+
+    .menu-strip {
+      background: #0e2238;
+      color: #dbe7f3;
+      font-size: 13px;
+      padding: 10px 16px;
+      text-align: center;
+    }
+
+    .menu-strip a {
+      color: #7fb6ff;
+      text-decoration: none;
+      margin: 0 8px;
+      font-weight: 500;
+    }
+
+    .menu-strip a:hover {
+      text-decoration: underline;
+    }
+
+    main {
+      flex: 1;
       min-height: 90vh;
-      padding: 0;
+      padding: 12px;
+      display: flex;
+    }
+
+    #chat_form {
+      flex: 1;
+      width: 100%;
+      min-height: 100%;
+      background: #ffffff;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    footer {
+      background: #f0f3f8;
+      font-size: 12px;
+      color: #555;
+      text-align: center;
+      padding: 10px;
     }
   </style>
 </head>
+
 <body>
 
-  <div class="banner">
+  <header>
     <h1>TradeFlow AI</h1>
-    <p>Your AI operations system for contractors</p>
-  </div>
+    <p>Contractor workflows, estimates, and proposals — in one system</p>
+  </header>
 
   <div class="menu-strip">
-    <span>Tip: Type <strong>menu</strong> at any time</span> |
-    <a href="https://tradeflowai.tech">Back to Site</a> |
-    <a href="https://tradeflowai.tech/upgrade">Upgrade</a>
+    Use the menu inside the app at any time.
+    <a href="https://tradeflowai.tech">Back to site</a> |
+    <a href="https://tradeflowai.tech/pricing">Upgrade</a>
   </div>
 
-  <div id="aminos-chat"></div>
+  <main>
+    <div id="chat_form"></div>
+  </main>
 
-<script
-  src="https://app.aminos.ai/js/chat_form_plugin.js"
-  data-bot-id="57774"
-  data-target="#aminos-chat">
-</script>
+  <footer>
+    © TradeFlow AI — Powered by Dual Automation
+  </footer>
 
-  <!-- INLINE AMINOS BOT (THIS MUST MATCH AMINOS EXACTLY) -->
-  <script src="https://app.aminos.ai/js/chat_form_plugin.js"
-          data-bot-id="57774">
+  <script
+    src="https://app.aminos.ai/js/chat_form_plugin.js"
+    data-bot-id="57775">
   </script>
 
 </body>
