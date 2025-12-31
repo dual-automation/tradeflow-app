@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>TradeFlow AI — App</title>
+  <title>TradeFlow AI App</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <style>
@@ -13,98 +13,140 @@
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, sans-serif;
     }
 
-    body {
+    html, body {
+      height: 100%;
+      width: 100%;
       background: #f5f7fb;
-      color: #111;
-      min-height: 100vh;
+      overflow: hidden;
+    }
+
+    body {
       display: flex;
       flex-direction: column;
     }
 
+    /* ===== HEADER ===== */
     header {
-      background: linear-gradient(135deg, #0b1c2d, #123a63);
-      color: #fff;
-      padding: 22px 28px;
+      background: linear-gradient(135deg, #050a30, #3533cd);
+      color: #ffffff;
+      padding: 18px 20px;
       text-align: center;
+      flex-shrink: 0;
     }
 
     header h1 {
-      font-size: 26px;
+      font-size: 24px;
       font-weight: 600;
-      margin-bottom: 6px;
+      margin-bottom: 4px;
     }
 
     header p {
-      font-size: 14px;
+      font-size: 13px;
       opacity: 0.9;
     }
 
+    /* ===== MENU STRIP ===== */
     .menu-strip {
-      background: #0e2238;
-      color: #dbe7f3;
-      font-size: 13px;
-      padding: 10px 16px;
+      background: #ffffff;
+      border-bottom: 1px solid #e0e4ee;
+      padding: 10px;
       text-align: center;
+      font-size: 13px;
+      flex-shrink: 0;
     }
 
     .menu-strip a {
-      color: #7fb6ff;
+      color: #3533cd;
+      font-weight: 600;
       text-decoration: none;
       margin: 0 8px;
-      font-weight: 500;
+      white-space: nowrap;
     }
 
     .menu-strip a:hover {
       text-decoration: underline;
     }
 
-    main {
+    /* ===== APP CONTAINER ===== */
+    .app-container {
       flex: 1;
-      min-height: 90vh;
-      padding: 12px;
+      height: calc(100vh - 130px);
       display: flex;
+      overflow: hidden;
+      padding: 8px;
     }
 
+    /* ===== AMINOS TARGET ===== */
     #chat_form {
       flex: 1;
       width: 100%;
-      min-height: 100%;
+      height: 100%;
       background: #ffffff;
       border-radius: 8px;
       overflow: hidden;
     }
 
-    footer {
-      background: #f0f3f8;
-      font-size: 12px;
-      color: #555;
-      text-align: center;
-      padding: 10px;
+    /* Force iframe to fill container */
+    #chat_form iframe {
+      width: 100% !important;
+      height: 100% !important;
+      border: none !important;
+    }
+
+    /* ===== MOBILE FIXES ===== */
+    @media (max-width: 768px) {
+
+      header {
+        padding: 14px;
+      }
+
+      header h1 {
+        font-size: 20px;
+      }
+
+      header p {
+        font-size: 12px;
+      }
+
+      .menu-strip {
+        font-size: 12px;
+        line-height: 1.5;
+      }
+
+      .menu-strip a {
+        display: inline-block;
+        margin: 4px 6px;
+      }
+
+      .app-container {
+        height: calc(100vh - 115px);
+        padding: 6px;
+      }
     }
   </style>
 </head>
 
 <body>
 
+  <!-- HEADER -->
   <header>
     <h1>TradeFlow AI</h1>
-    <p>Contractor workflows, estimates, and proposals — in one system</p>
+    <p>Estimates, proposals, and operations — automated</p>
   </header>
 
+  <!-- MENU -->
   <div class="menu-strip">
-    Use the menu inside the app at any time.
-    <a href="https://tradeflowai.tech">Back to site</a> |
+    Tip: Type <strong>menu</strong> inside the app at any time |
+    <a href="https://tradeflowai.tech">Back to Site</a>
     <a href="https://tradeflowai.tech/pricing">Upgrade</a>
   </div>
 
-  <main>
+  <!-- APP -->
+  <div class="app-container">
     <div id="chat_form"></div>
-  </main>
+  </div>
 
-  <footer>
-    © TradeFlow AI — Powered by Dual Automation
-  </footer>
-
+  <!-- AMINOS INLINE BOT -->
   <script
     src="https://app.aminos.ai/js/chat_form_plugin.js"
     data-bot-id="57691">
