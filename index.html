@@ -2,34 +2,77 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>TradeFlow AI — Pro</title>
+  <title>TradeFlow AI App</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
   <style>
-    body { margin:0; font-family: Arial, sans-serif; background:#f4f6f8; }
+    body {
+      margin: 0;
+      font-family: Inter, Arial, sans-serif;
+      background: #f7f8fb;
+    }
+
     header {
-      background: linear-gradient(135deg, #020617, #0f766e);
-      color: #fff;
+      background: linear-gradient(135deg, #050a30, #3533cd);
+      color: white;
       padding: 24px;
       text-align: center;
     }
-    main { padding: 20px; }
+
+    .menu-strip {
+      background: #ffffff;
+      border-bottom: 1px solid #e5e7eb;
+      padding: 10px 16px;
+      display: flex;
+      justify-content: space-between;
+      font-size: 14px;
+    }
+
+    .menu-strip a {
+      color: #3533cd;
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    #bot-container {
+      min-height: 90vh;
+      padding: 0;
+    }
   </style>
 </head>
+
 <body>
-  <header>
-    <h1>TradeFlow AI — Pro</h1>
-    <p>Production quoting, proposals, and client workflows</p>
-  </header>
 
-    <main>
-  <div id="chat_form" style="width:100%; min-height:75vh;"></div>
+<header>
+  <h1>TradeFlow AI</h1>
+  <p>Your AI operations assistant for contractors</p>
+</header>
 
-  <script 
-    src="https://app.aminos.ai/js/chat_form_plugin.js" 
-    data-bot-id="57774">
-  </script>
-</main>
+<div class="menu-strip">
+  <span>Tip: Type <strong>menu</strong> anytime for options</span>
+  <a href="https://tradeflowai.tech">Back to site</a>
+</div>
 
-  </main>
+<div id="bot-container"></div>
+
+<script>
+  /*
+    🔒 TEMPORARY LAUNCH MODE
+    --------------------------------
+    For launch, we load ADVANCED by default.
+    When Supabase gating is finalized, this
+    section will dynamically choose the bot.
+  */
+
+  const BOT_ID = 57775; // ✅ Advanced bot ONLY
+
+  const script = document.createElement("script");
+  script.src = "https://app.aminos.ai/js/chat_form_plugin.js";
+  script.setAttribute("data-bot-id", BOT_ID);
+  script.async = true;
+
+  document.getElementById("bot-container").appendChild(script);
+</script>
+
 </body>
 </html>
