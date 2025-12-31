@@ -8,13 +8,13 @@
   <style>
     body {
       margin: 0;
-      font-family: Inter, Arial, sans-serif;
-      background: #f7f8fb;
+      font-family: Arial, Helvetica, sans-serif;
+      background: #f5f6fa;
     }
 
     header {
       background: linear-gradient(135deg, #050a30, #3533cd);
-      color: white;
+      color: #ffffff;
       padding: 24px;
       text-align: center;
     }
@@ -31,12 +31,12 @@
     .menu-strip a {
       color: #3533cd;
       text-decoration: none;
-      font-weight: 600;
+      font-weight: bold;
     }
 
-    #bot-container {
+    .bot-wrapper {
       min-height: 90vh;
-      padding: 0;
+      width: 100%;
     }
   </style>
 </head>
@@ -45,34 +45,20 @@
 
 <header>
   <h1>TradeFlow AI</h1>
-  <p>Your AI operations assistant for contractors</p>
+  <p>AI-powered operations for contractors</p>
 </header>
 
 <div class="menu-strip">
-  <span>Tip: Type <strong>menu</strong> anytime for options</span>
+  <span>Type <strong>menu</strong> anytime for options</span>
   <a href="https://tradeflowai.tech">Back to site</a>
 </div>
 
-<div id="bot-container"></div>
-
-<script>
-  /*
-    🔒 TEMPORARY LAUNCH MODE
-    --------------------------------
-    For launch, we load ADVANCED by default.
-    When Supabase gating is finalized, this
-    section will dynamically choose the bot.
-  */
-
-  const BOT_ID = 57775; // ✅ Advanced bot ONLY
-
-  const script = document.createElement("script");
-  script.src = "https://app.aminos.ai/js/chat_form_plugin.js";
-  script.setAttribute("data-bot-id", BOT_ID);
-  script.async = true;
-
-  document.getElementById("bot-container").appendChild(script);
-</script>
+<div class="bot-wrapper">
+  <script
+    src="https://app.aminos.ai/js/chat_form_plugin.js"
+    data-bot-id="57775">
+  </script>
+</div>
 
 </body>
 </html>
