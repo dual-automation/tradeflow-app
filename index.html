@@ -5,140 +5,158 @@
   <title>TradeFlow AI App</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <!-- Supabase JS -->
-  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+  <!-- SUPABASE -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: Inter, system-ui, sans-serif; }
+
     body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #f6f7fb;
+      background: #f5f7fb;
+      color: #0f172a;
     }
 
-    .banner {
+    header {
       background: linear-gradient(135deg, #050a30, #3533cd);
-      color: white;
-      padding: 24px;
+      color: #fff;
+      padding: 22px 16px;
       text-align: center;
+    }
+
+    header h1 {
+      font-size: 28px;
+      font-weight: 700;
+    }
+
+    header p {
+      font-size: 14px;
+      opacity: 0.9;
+      margin-top: 4px;
     }
 
     .menu-strip {
-      background: #0e1a5f;
-      color: #fff;
-      padding: 10px 16px;
-      font-size: 14px;
+      background: #0b1c3f;
+      color: #e5e7eb;
       text-align: center;
+      padding: 10px;
+      font-size: 13px;
+    }
+
+    .menu-strip a {
+      color: #93c5fd;
+      margin-left: 6px;
+      text-decoration: underline;
+    }
+
+    main {
+      min-height: 90vh;
+      padding: 14px;
     }
 
     #app {
-      min-height: 90vh;
-      padding: 20px;
-      box-sizing: border-box;
+      width: 100%;
+      min-height: 80vh;
+      background: #ffffff;
+      border-radius: 10px;
+      box-shadow: 0 10px 28px rgba(0,0,0,.08);
+      overflow: hidden;
     }
 
-    .upgrade-box {
-      max-width: 520px;
-      margin: 60px auto;
-      background: white;
-      padding: 32px;
-      border-radius: 8px;
+    .loading {
       text-align: center;
+      padding: 80px 20px;
+      font-size: 16px;
     }
 
-    .upgrade-box a {
-      display: inline-block;
-      margin-top: 16px;
-      padding: 12px 20px;
-      background: #3533cd;
-      color: #fff;
-      text-decoration: none;
-      border-radius: 6px;
-      font-weight: bold;
+    footer {
+      display: flex;
+      justify-content: center;
+      gap: 18px;
+      padding: 14px;
+      font-size: 14px;
+    }
+
+    footer a {
+      color: #1d4ed8;
+      text-decoration: underline;
+    }
+
+    @media (max-width: 640px) {
+      header h1 { font-size: 22px; }
+      footer { flex-direction: column; gap: 8px; }
     }
   </style>
 </head>
 
 <body>
 
-  <!-- Banner -->
-  <div class="banner">
-    <h1>TradeFlow AI</h1>
-    <p>Your AI Operations System for Contractors</p>
-  </div>
+<header>
+  <h1>TradeFlow AI</h1>
+  <p>Your AI Operating System for Contractors</p>
+</header>
 
-  <!-- Helper / Menu Strip -->
-  <div class="menu-strip">
-    Tip: Type <strong>menu</strong> anytime to see what this AI can do ·
-    <a href="https://tradeflowai.tech" style="color:#cfd4ff;">Back to site</a>
-  </div>
+<div class="menu-strip">
+  Tip: Type <strong>menu</strong> anytime to see what the AI can do
+  <a href="https://tradeflowai.tech">Back to site</a>
+</div>
 
-  <!-- App Container -->
+<main>
   <div id="app">
-    <p>Loading your AI system…</p>
+    <div class="loading">Loading your AI system…</div>
   </div>
+</main>
 
-  <!-- Gating + Bot Loader -->
-  <script>
-    const SUPABASE_URL = "https://dual-automation.supabase.co";
-    const SUPABASE_ANON_KEY = "vrotpgktirjdcdkujofd";
+<footer>
+  <a href="https://tradeflowai.tech">Back to main site</a>
+  <a href="https://tradeflowai.tech/upgrade">Upgrade plan</a>
+</footer>
 
-    const supabase = supabaseJs.createClient(
-      SUPABASE_URL,
-      SUPABASE_ANON_KEY
-    );
+<script>
+/* ================================
+   SUPABASE CONFIG (LOCKED)
+================================ */
+const SUPABASE_URL = "https://vrotpgktirjdcdkujofd.supabase.co";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZyb3RwZ2t0aXJqZGNka3Vqb2ZkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjYyMzU4MzcsImV4cCI6MjA4MTgxMTgzN30.Ri93ICnMstBEVM4xL13VDBOazj6OkpPJ5rucQOO2Hz8";
 
-    async function loadTradeFlowBot() {
-      const { data: { user } } = await supabase.auth.getUser();
+const supabase = supabaseJs.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-      if (!user) {
-        window.location.href = "/login.html";
-        return;
-      }
+/* ================================
+   GATE + LOAD AI
+================================ */
+(async () => {
+  const { data: { user } } = await supabase.auth.getUser();
 
-      const { data, error } = await supabase
-        .from("subscriptions")
-        .select("plan_code, status")
-        .eq("userId", user.id)
-        .single();
+  if (!user) {
+    window.location.href = "https://tradeflowai.tech/login";
+    return;
+  }
 
-      if (error || !data || data.status !== "active") {
-        document.getElementById("app").innerHTML = `
-          <div class="upgrade-box">
-            <h2>Subscription Required</h2>
-            <p>Your account does not have an active subscription.</p>
-            <a href="https://tradeflowai.tech/pricing">Upgrade Now</a>
-          </div>
-        `;
-        return;
-      }
+  const { data: sub } = await supabase
+    .from("subscriptions")
+    .select("plan_code, status")
+    .eq("user_id", user.id)
+    .single();
 
-      let botId = null;
+  if (!sub || sub.status !== "active") {
+    window.location.href = "https://tradeflowai.tech/upgrade";
+    return;
+  }
 
-      if (data.plan_code === "pro") {
-        botId = "57774";
-      }
+  const app = document.getElementById("app");
+  app.innerHTML = "";
 
-      if (data.plan_code === "advanced") {
-        botId = "57775";
-      }
+  const script = document.createElement("script");
+  script.src = "https://app.aminos.ai/js/chat_form_plugin.js";
 
-      if (!botId) {
-        document.getElementById("app").innerHTML = `
-          <div class="upgrade-box">
-            <p>Invalid plan. Please contact support.</p>
-          </div>
-        `;
-        return;
-      }
+  // 🔁 BOT SELECTION
+  // Pro → 57774
+  // Advanced → 57775
+  script.dataset.botId = sub.plan_code === "advanced" ? "57775" : "57774";
 
-      const script = document.createElement("script");
-      script.src = "https://app.aminos.ai/js/chat_form_plugin.js";
-      script.setAttribute("data-bot-id", botId);
-      document.body.appendChild(script);
-    }
-
-    loadTradeFlowBot();
-  </script>
+  script.defer = true;
+  app.appendChild(script);
+})();
+</script>
 
 </body>
 </html>
