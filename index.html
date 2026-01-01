@@ -5,7 +5,7 @@
   <title>TradeFlow AI App</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <!-- SUPABASE -->
+  <!-- Supabase SDK (load ONCE) -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <style>
@@ -96,7 +96,7 @@
 </header>
 
 <div class="menu-strip">
-  Tip: Type <strong>menu</strong> anytime to see what the AI can do
+  Tip: Type <strong>menu</strong> anytime to explore features
   <a href="https://tradeflowai.tech">Back to site</a>
 </div>
 
@@ -112,50 +112,41 @@
 </footer>
 
 <script>
-/* ================================
-   SUPABASE CONFIG (LOCKED)
-================================ */
-const SUPABASE_URL = "https://vrotpgktirjdcdkujofd.supabase.co";
-const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZyb3RwZ2t0aXJqZGNka3Vqb2ZkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjYyMzU4MzcsImV4cCI6MjA4MTgxMTgzN30.Ri93ICnMstBEVM4xL13VDBOazj6OkpPJ5rucQOO2Hz8";
+  // Supabase config (SAFE — no name collision)
+  const SUPABASE_URL = "https://vrotpgktirjdcdkujofd.supabase.co";
+  const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZyb3RwZ2t0aXJqZGNka3Vqb2ZkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjYyMzU4MzcsImV4cCI6MjA4MTgxMTgzN30.Ri93ICnMstBEVM4xL13VDBOazj6OkpPJ5rucQOO2Hz8";
 
-const supabase = supabaseJs.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  const sbClient = supabaseJs.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-/* ================================
-   GATE + LOAD AI
-================================ */
-(async () => {
-  const { data: { user } } = await supabase.auth.getUser();
+  (async () => {
+    const { data } = await sbClient.auth.getUser();
 
-  if (!user) {
-    window.location.href = "https://tradeflowai.tech/login";
-    return;
-  }
+    if (!data.user) {
+      window.location.href = "https://tradeflowai.tech/login";
+      return;
+    }
 
-  const { data: sub } = await supabase
-    .from("subscriptions")
-    .select("plan_code, status")
-    .eq("user_id", user.id)
-    .single();
+    const { data: sub } = await sbClient
+      .from("subscriptions")
+      .select("plan_code, status")
+      .eq("user_id", data.user.id)
+      .single();
 
-  if (!sub || sub.status !== "active") {
-    window.location.href = "https://tradeflowai.tech/upgrade";
-    return;
-  }
+    if (!sub || sub.status !== "active") {
+      window.location.href = "https://tradeflowai.tech/upgrade";
+      return;
+    }
 
-  const app = document.getElementById("app");
-  app.innerHTML = "";
+    const app = document.getElementById("app");
+    app.innerHTML = "";
 
-  const script = document.createElement("script");
-  script.src = "https://app.aminos.ai/js/chat_form_plugin.js";
+    const script = document.createElement("script");
+    script.src = "https://app.aminos.ai/js/chat_form_plugin.js";
+    script.dataset.botId = sub.plan_code === "advanced" ? "57775" : "57774";
+    script.defer = true;
 
-  // 🔁 BOT SELECTION
-  // Pro → 57774
-  // Advanced → 57775
-  script.dataset.botId = sub.plan_code === "advanced" ? "57775" : "57774";
-
-  script.defer = true;
-  app.appendChild(script);
-})();
+    app.appendChild(script);
+  })();
 </script>
 
 </body>
