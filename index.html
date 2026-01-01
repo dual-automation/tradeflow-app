@@ -3,87 +3,71 @@
 <head>
   <meta charset="UTF-8" />
   <title>TradeFlow AI App</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  <!-- Supabase SDK (load ONCE) -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
 
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: Inter, system-ui, sans-serif; }
-
     body {
+      margin: 0;
+      font-family: Arial, sans-serif;
       background: #f5f7fb;
-      color: #0f172a;
     }
 
     header {
-      background: linear-gradient(135deg, #050a30, #3533cd);
-      color: #fff;
-      padding: 22px 16px;
+      background: linear-gradient(135deg, #0b1c3d, #123c7a);
+      color: white;
+      padding: 24px;
       text-align: center;
-    }
-
-    header h1 {
-      font-size: 28px;
-      font-weight: 700;
-    }
-
-    header p {
-      font-size: 14px;
-      opacity: 0.9;
-      margin-top: 4px;
     }
 
     .menu-strip {
-      background: #0b1c3f;
-      color: #e5e7eb;
-      text-align: center;
+      background: #0b1c3d;
+      color: #fff;
       padding: 10px;
-      font-size: 13px;
-    }
-
-    .menu-strip a {
-      color: #93c5fd;
-      margin-left: 6px;
-      text-decoration: underline;
-    }
-
-    main {
-      min-height: 90vh;
-      padding: 14px;
-    }
-
-    #app {
-      width: 100%;
-      min-height: 80vh;
-      background: #ffffff;
-      border-radius: 10px;
-      box-shadow: 0 10px 28px rgba(0,0,0,.08);
-      overflow: hidden;
-    }
-
-    .loading {
       text-align: center;
-      padding: 80px 20px;
-      font-size: 16px;
-    }
-
-    footer {
-      display: flex;
-      justify-content: center;
-      gap: 18px;
-      padding: 14px;
       font-size: 14px;
     }
 
-    footer a {
-      color: #1d4ed8;
+    .menu-strip a {
+      color: #9ecbff;
+      margin-left: 12px;
       text-decoration: underline;
     }
 
-    @media (max-width: 640px) {
-      header h1 { font-size: 22px; }
-      footer { flex-direction: column; gap: 8px; }
+    #app {
+      min-height: 90vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 16px;
+    }
+
+    .card {
+      background: white;
+      padding: 24px;
+      border-radius: 10px;
+      width: 100%;
+      max-width: 420px;
+      text-align: center;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      margin-top: 12px;
+      font-size: 16px;
+    }
+
+    button {
+      margin-top: 12px;
+      padding: 12px;
+      width: 100%;
+      font-size: 16px;
+      background: #123c7a;
+      color: white;
+      border: none;
+      border-radius: 6px;
     }
   </style>
 </head>
@@ -100,53 +84,77 @@
   <a href="https://tradeflowai.tech">Back to site</a>
 </div>
 
-<main>
-  <div id="app">
-    <div class="loading">Loading your AI system…</div>
-  </div>
-</main>
-
-<footer>
-  <a href="https://tradeflowai.tech">Back to main site</a>
-  <a href="https://tradeflowai.tech/upgrade">Upgrade plan</a>
-</footer>
+<div id="app">
+  <div class="card" id="status">Loading your AI system…</div>
+</div>
 
 <script>
-  // Supabase config (SAFE — no name collision)
-  const SUPABASE_URL = "https://vrotpgktirjdcdkujofd.supabase.co";
-  const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZyb3RwZ2t0aXJqZGNka3Vqb2ZkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjYyMzU4MzcsImV4cCI6MjA4MTgxMTgzN30.Ri93ICnMstBEVM4xL13VDBOazj6OkpPJ5rucQOO2Hz8";
+  const supabase = supabaseJs.createClient(
+    "https://dual-automation.supabase.co",
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZyb3RwZ2t0aXJqZGNka3Vqb2ZkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjYyMzU4MzcsImV4cCI6MjA4MTgxMTgzN30.Ri93ICnMstBEVM4xL13VDBOazj6OkpPJ5rucQOO2Hz8"
+  );
 
-  const sbClient = supabaseJs.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  const app = document.getElementById("app");
 
-  (async () => {
-    const { data } = await sbClient.auth.getUser();
+  async function init() {
+    const { data: { user } } = await supabase.auth.getUser();
 
-    if (!data.user) {
-      window.location.href = "https://tradeflowai.tech/login";
+    if (!user) {
+      app.innerHTML = `
+        <div class="card">
+          <h3>Sign in to continue</h3>
+          <input id="email" placeholder="Email address" />
+          <button onclick="login()">Send login link</button>
+        </div>
+      `;
       return;
     }
 
-    const { data: sub } = await sbClient
+    const { data } = await supabase
       .from("subscriptions")
-      .select("plan_code, status")
-      .eq("user_id", data.user.id)
+      .select("plan_code,status")
+      .eq("user_id", user.id)
+      .eq("status", "active")
       .single();
 
-    if (!sub || sub.status !== "active") {
-      window.location.href = "https://tradeflowai.tech/upgrade";
+    if (!data) {
+      app.innerHTML = `
+        <div class="card">
+          <h3>No active plan</h3>
+          <a href="https://tradeflowai.tech">Upgrade here</a>
+        </div>
+      `;
       return;
     }
 
-    const app = document.getElementById("app");
-    app.innerHTML = "";
+    let botId =
+      data.plan_code === "advanced" ? "57775" :
+      data.plan_code === "pro" ? "57774" : null;
 
-    const script = document.createElement("script");
-    script.src = "https://app.aminos.ai/js/chat_form_plugin.js";
-    script.dataset.botId = sub.plan_code === "advanced" ? "57775" : "57774";
-    script.defer = true;
+    if (!botId) {
+      app.innerHTML = "Invalid plan.";
+      return;
+    }
 
-    app.appendChild(script);
-  })();
+    app.innerHTML = `<div id="chat_form"></div>`;
+
+    const s = document.createElement("script");
+    s.src = "https://app.aminos.ai/js/chat_form_plugin.js";
+    s.setAttribute("data-bot-id", botId);
+    s.defer = true;
+    document.body.appendChild(s);
+  }
+
+  async function login() {
+    const email = document.getElementById("email").value;
+    await supabase.auth.signInWithOtp({
+      email,
+      options: { emailRedirectTo: window.location.href }
+    });
+    alert("Check your email for the login link.");
+  }
+
+  init();
 </script>
 
 </body>
