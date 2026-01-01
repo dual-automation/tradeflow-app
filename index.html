@@ -5,151 +5,139 @@
   <title>TradeFlow AI App</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
+  <!-- Supabase JS -->
+  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+
   <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, sans-serif;
-    }
-
-    html, body {
-      height: 100%;
-      width: 100%;
-      background: #f5f7fb;
-      overflow: hidden;
-    }
-
     body {
-      display: flex;
-      flex-direction: column;
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f6f7fb;
     }
 
-    /* ===== HEADER ===== */
-    header {
+    .banner {
       background: linear-gradient(135deg, #050a30, #3533cd);
-      color: #ffffff;
-      padding: 18px 20px;
+      color: white;
+      padding: 24px;
       text-align: center;
-      flex-shrink: 0;
     }
 
-    header h1 {
-      font-size: 24px;
-      font-weight: 600;
-      margin-bottom: 4px;
-    }
-
-    header p {
-      font-size: 13px;
-      opacity: 0.9;
-    }
-
-    /* ===== MENU STRIP ===== */
     .menu-strip {
-      background: #ffffff;
-      border-bottom: 1px solid #e0e4ee;
-      padding: 10px;
+      background: #0e1a5f;
+      color: #fff;
+      padding: 10px 16px;
+      font-size: 14px;
       text-align: center;
-      font-size: 13px;
-      flex-shrink: 0;
     }
 
-    .menu-strip a {
-      color: #3533cd;
-      font-weight: 600;
-      text-decoration: none;
-      margin: 0 8px;
-      white-space: nowrap;
+    #app {
+      min-height: 90vh;
+      padding: 20px;
+      box-sizing: border-box;
     }
 
-    .menu-strip a:hover {
-      text-decoration: underline;
-    }
-
-    /* ===== APP CONTAINER ===== */
-    .app-container {
-      flex: 1;
-      height: calc(100vh - 130px);
-      display: flex;
-      overflow: hidden;
-      padding: 8px;
-    }
-
-    /* ===== AMINOS TARGET ===== */
-    #chat_form {
-      flex: 1;
-      width: 100%;
-      height: 100%;
-      background: #ffffff;
+    .upgrade-box {
+      max-width: 520px;
+      margin: 60px auto;
+      background: white;
+      padding: 32px;
       border-radius: 8px;
-      overflow: hidden;
+      text-align: center;
     }
 
-    /* Force iframe to fill container */
-    #chat_form iframe {
-      width: 100% !important;
-      height: 100% !important;
-      border: none !important;
-    }
-
-    /* ===== MOBILE FIXES ===== */
-    @media (max-width: 768px) {
-
-      header {
-        padding: 14px;
-      }
-
-      header h1 {
-        font-size: 20px;
-      }
-
-      header p {
-        font-size: 12px;
-      }
-
-      .menu-strip {
-        font-size: 12px;
-        line-height: 1.5;
-      }
-
-      .menu-strip a {
-        display: inline-block;
-        margin: 4px 6px;
-      }
-
-      .app-container {
-        height: calc(100vh - 115px);
-        padding: 6px;
-      }
+    .upgrade-box a {
+      display: inline-block;
+      margin-top: 16px;
+      padding: 12px 20px;
+      background: #3533cd;
+      color: #fff;
+      text-decoration: none;
+      border-radius: 6px;
+      font-weight: bold;
     }
   </style>
 </head>
 
 <body>
 
-  <!-- HEADER -->
-  <header>
+  <!-- Banner -->
+  <div class="banner">
     <h1>TradeFlow AI</h1>
-    <p>Estimates, proposals, and operations — automated</p>
-  </header>
+    <p>Your AI Operations System for Contractors</p>
+  </div>
 
-  <!-- MENU -->
+  <!-- Helper / Menu Strip -->
   <div class="menu-strip">
-    Tip: Type <strong>menu</strong> inside the app at any time |
-    <a href="https://tradeflowai.tech">Back to Site</a>
-    <a href="https://tradeflowai.tech/pricing">Upgrade</a>
+    Tip: Type <strong>menu</strong> anytime to see what this AI can do ·
+    <a href="https://tradeflowai.tech" style="color:#cfd4ff;">Back to site</a>
   </div>
 
-  <!-- APP -->
-  <div class="app-container">
-    <div id="chat_form"></div>
+  <!-- App Container -->
+  <div id="app">
+    <p>Loading your AI system…</p>
   </div>
 
-  <!-- AMINOS INLINE BOT -->
-  <script
-    src="https://app.aminos.ai/js/chat_form_plugin.js"
-    data-bot-id="57775">
+  <!-- Gating + Bot Loader -->
+  <script>
+    const SUPABASE_URL = "https://dual-automation.supabase.co";
+    const SUPABASE_ANON_KEY = "vrotpgktirjdcdkujofd";
+
+    const supabase = supabaseJs.createClient(
+      SUPABASE_URL,
+      SUPABASE_ANON_KEY
+    );
+
+    async function loadTradeFlowBot() {
+      const { data: { user } } = await supabase.auth.getUser();
+
+      if (!user) {
+        window.location.href = "/login.html";
+        return;
+      }
+
+      const { data, error } = await supabase
+        .from("subscriptions")
+        .select("plan_code, status")
+        .eq("userId", user.id)
+        .single();
+
+      if (error || !data || data.status !== "active") {
+        document.getElementById("app").innerHTML = `
+          <div class="upgrade-box">
+            <h2>Subscription Required</h2>
+            <p>Your account does not have an active subscription.</p>
+            <a href="https://tradeflowai.tech/pricing">Upgrade Now</a>
+          </div>
+        `;
+        return;
+      }
+
+      let botId = null;
+
+      if (data.plan_code === "pro") {
+        botId = "57774";
+      }
+
+      if (data.plan_code === "advanced") {
+        botId = "57775";
+      }
+
+      if (!botId) {
+        document.getElementById("app").innerHTML = `
+          <div class="upgrade-box">
+            <p>Invalid plan. Please contact support.</p>
+          </div>
+        `;
+        return;
+      }
+
+      const script = document.createElement("script");
+      script.src = "https://app.aminos.ai/js/chat_form_plugin.js";
+      script.setAttribute("data-bot-id", botId);
+      document.body.appendChild(script);
+    }
+
+    loadTradeFlowBot();
   </script>
 
 </body>
